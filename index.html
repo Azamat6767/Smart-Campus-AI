@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Campus AI — система управления кампусом</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#"><span class="brand-icon">✦</span><span>Smart Campus<small>AI · Управление кампусом</small></span></a>
+    <div class="nav-label">ОСНОВНОЕ</div>
+    <button class="nav-link active" data-page="dashboard"><span>▦</span> Обзор</button>
+    <button class="nav-link" data-page="rooms"><span>▤</span> Аудитории <b id="roomNavCount">12</b></button>
+    <button class="nav-link" data-page="devices"><span>◉</span> IoT-устройства <b id="deviceNavCount">20</b></button>
+    <button class="nav-link" data-page="incidents"><span>⚑</span> Заявки <b id="incidentNavCount">0</b></button>
+    <button class="nav-link" data-page="analytics"><span>⌁</span> AI-аналитика</button>
+    <div class="nav-label">СИСТЕМА</div>
+    <button class="nav-link" data-page="notifications"><span>♧</span> Уведомления</button>
+    <button class="nav-link" data-page="settings"><span>⚙</span> Настройки</button>
+    <div class="sidebar-bottom"><div class="avatar">АД</div><div><strong>Администратор</strong><small>Учебный доступ</small></div><span class="online-dot"></span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="mobile-menu" id="mobileMenu" aria-label="Открыть меню">☰</button>
+      <div class="breadcrumb">Кампус <span>/</span> <strong id="pageTitle">Обзор</strong></div>
+      <div class="top-actions">
+        <label class="search"><span>⌕</span><input id="globalSearch" placeholder="Поиск по кампусу..." aria-label="Поиск"></label>
+        <button class="icon-btn" id="themeToggle" title="Сменить тему">☼</button>
+        <button class="icon-btn notification-button" data-page="notifications" title="Уведомления">♧<i id="notificationDot"></i></button>
+        <div class="top-avatar">АД</div>
+      </div>
+    </header>
+
+    <section class="page active" id="page-dashboard">
+      <div class="welcome-row"><div><div class="eyebrow">ЧЕТВЕРГ, 22 ОКТЯБРЯ 2026</div><h1>Панель управления</h1><p class="muted">Состояние инфраструктуры кампуса в реальном времени.</p></div><button class="primary-btn" id="simulateBtn">↻ Обновить данные</button></div>
+      <div class="alert-banner"><span class="alert-symbol">!</span><div><strong id="alertHeadline">Система работает штатно</strong><p id="alertDescription">Мониторинг датчиков активен. Новые события появятся здесь автоматически.</p></div><button class="text-btn" data-page="analytics">Подробнее →</button></div>
+      <div class="kpi-grid">
+        <article class="kpi-card"><div class="kpi-top"><span>Аудитории</span><span class="kpi-icon blue">▤</span></div><div class="kpi-value" id="kpiRooms">12</div><div class="kpi-foot"><span class="positive">● 10 в норме</span><span>всего помещений</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><span>Устройства онлайн</span><span class="kpi-icon green">◉</span></div><div class="kpi-value" id="kpiDevices">18 <small>/ 20</small></div><div class="kpi-foot"><span class="positive" id="devicePercent">90% доступно</span><span>IoT-сеть</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><span>Открытые заявки</span><span class="kpi-icon orange">⚑</span></div><div class="kpi-value" id="kpiIncidents">3</div><div class="kpi-foot"><span class="warning-text">Требуют внимания</span><span>служба эксплуатации</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><span>Энергия сегодня</span><span class="kpi-icon purple">ϟ</span></div><div class="kpi-value" id="kpiEnergy">412 <small>кВт·ч</small></div><div class="kpi-foot"><span class="positive">↓ 4,8%</span><span>к прошлому дню</span></div></article>
+      </div>
+      <div class="content-grid">
+        <article class="panel wide-panel"><div class="panel-heading"><div><h2>Потребление энергии</h2><p class="muted">Расход электроэнергии по дням, кВт·ч</p></div><select id="energyPeriod" aria-label="Период графика"><option value="week">Последние 7 дней</option><option value="month">Последние 30 дней</option></select></div><div class="chart-wrap"><canvas id="energyChart"></canvas></div></article>
+        <article class="panel"><div class="panel-heading"><div><h2>Статус устройств</h2><p class="muted">Состояние IoT-сети</p></div><span class="live-pill">● LIVE</span></div><div class="chart-wrap donut-wrap"><canvas id="deviceChart"></canvas></div><div class="legend"><span><i class="legend-dot green-bg"></i>Онлайн <b id="onlineLegend">18</b></span><span><i class="legend-dot red-bg"></i>Офлайн <b id="offlineLegend">2</b></span></div></article>
+      </div>
+      <div class="content-grid lower-grid">
+        <article class="panel"><div class="panel-heading"><div><h2>Состояние аудиторий</h2><p class="muted">Температура и качество воздуха</p></div><button class="text-btn" data-page="rooms">Все аудитории →</button></div><div class="table-scroll"><table><thead><tr><th>Аудитория</th><th>Температура</th><th>CO₂</th><th>Статус</th></tr></thead><tbody id="roomPreview"></tbody></table></div></article>
+        <article class="panel"><div class="panel-heading"><div><h2>Последние события</h2><p class="muted">Обновления системы</p></div><button class="text-btn" data-page="notifications">Все →</button></div><div id="eventList" class="event-list"></div></article>
+      </div>
+    </section>
+
+    <section class="page" id="page-rooms">
+      <div class="welcome-row"><div><div class="eyebrow">ИНФРАСТРУКТУРА</div><h1>Аудитории</h1><p class="muted">Состояние помещений, датчиков и микроклимата.</p></div><button class="primary-btn" id="addRoomBtn">＋ Добавить аудиторию</button></div>
+      <div class="toolbar"><label class="search table-search">⌕ <input id="roomSearch" placeholder="Найти аудиторию..."></label><select id="roomStatusFilter"><option value="">Все статусы</option><option value="normal">Норма</option><option value="warning">Внимание</option><option value="critical">Критический</option></select><select id="buildingFilter"><option value="">Все корпуса</option><option>Корпус A</option><option>Корпус B</option><option>Корпус C</option></select></div>
+      <article class="panel"><div class="table-scroll"><table><thead><tr><th>Код / аудитория</th><th>Корпус</th><th>Этаж</th><th>Тип</th><th>Температура</th><th>CO₂</th><th>Занятость</th><th>Статус</th></tr></thead><tbody id="roomsTable"></tbody></table></div></article>
+    </section>
+
+    <section class="page" id="page-devices">
+      <div class="welcome-row"><div><div class="eyebrow">ИНТЕРНЕТ ВЕЩЕЙ</div><h1>IoT-устройства</h1><p class="muted">Подключённые датчики и состояние оборудования.</p></div><button class="primary-btn" id="addDeviceBtn">＋ Добавить устройство</button></div>
+      <div class="toolbar"><label class="search table-search">⌕ <input id="deviceSearch" placeholder="Поиск по ID или аудитории..."></label><select id="deviceStatusFilter"><option value="">Все состояния</option><option value="online">Онлайн</option><option value="offline">Офлайн</option></select><select id="deviceTypeFilter"><option value="">Все типы</option><option value="Температура">Температура</option><option value="CO₂">CO₂</option><option value="Освещение">Освещение</option><option value="Энергия">Энергия</option><option value="Доступ">Доступ</option></select></div>
+      <article class="panel"><div class="table-scroll"><table><thead><tr><th>ID устройства</th><th>Аудитория</th><th>Тип датчика</th><th>Показание</th><th>Статус</th><th>Обновлено</th></tr></thead><tbody id="devicesTable"></tbody></table></div></article>
+    </section>
+
+    <section class="page" id="page-incidents">
+      <div class="welcome-row"><div><div class="eyebrow">СЛУЖБА ЭКСПЛУАТАЦИИ</div><h1>Заявки и инциденты</h1><p class="muted">Создавайте заявки и отслеживайте ход выполнения.</p></div><button class="primary-btn" id="addIncidentBtn">＋ Новая заявка</button></div>
+      <div class="kpi-grid compact-kpis"><article class="kpi-card"><div class="kpi-top"><span>Всего заявок</span><span class="kpi-icon blue">▤</span></div><div class="kpi-value" id="incidentTotal">0</div></article><article class="kpi-card"><div class="kpi-top"><span>Открытые</span><span class="kpi-icon orange">⚑</span></div><div class="kpi-value" id="incidentOpen">0</div></article><article class="kpi-card"><div class="kpi-top"><span>В работе</span><span class="kpi-icon purple">↻</span></div><div class="kpi-value" id="incidentProgress">0</div></article><article class="kpi-card"><div class="kpi-top"><span>Решённые</span><span class="kpi-icon green">✓</span></div><div class="kpi-value" id="incidentResolved">0</div></article></div>
+      <div class="toolbar"><label class="search table-search">⌕ <input id="incidentSearch" placeholder="Поиск по заявкам..."></label><select id="incidentFilter"><option value="">Все статусы</option><option value="open">Открыта</option><option value="progress">В работе</option><option value="resolved">Решена</option></select></div>
+      <article class="panel"><div class="table-scroll"><table><thead><tr><th>Заявка</th><th>Аудитория</th><th>Приоритет</th><th>Ответственный</th><th>Статус</th><th>Действия</th></tr></thead><tbody id="incidentsTable"></tbody></table></div></article>
+    </section>
+
+    <section class="page" id="page-analytics">
+      <div class="welcome-row"><div><div class="eyebrow">ИНТЕЛЛЕКТУАЛЬНЫЙ МОНИТОРИНГ</div><h1>AI-аналитика</h1><p class="muted">Обнаружение отклонений по порогам и статистическому анализу.</p></div><button class="primary-btn" id="runAnalysisBtn">✦ Запустить анализ</button></div>
+      <div class="alert-banner"><span class="alert-symbol">✦</span><div><strong>Модуль анализа активен</strong><p>Используются демонстрационные данные и правила выявления аномалий. Внешний AI API не требуется.</p></div></div>
+      <div class="content-grid"><article class="panel"><div class="panel-heading"><div><h2>Температура по аудиториям</h2><p class="muted">Текущее значение, °C</p></div></div><div class="chart-wrap"><canvas id="temperatureChart"></canvas></div></article><article class="panel"><div class="panel-heading"><div><h2>Уровень CO₂</h2><p class="muted">Частей на миллион (ppm)</p></div></div><div class="chart-wrap"><canvas id="co2Chart"></canvas></div></article></div>
+      <article class="panel analysis-panel"><div class="panel-heading"><div><h2>Обнаруженные аномалии</h2><p class="muted">Причина, риск и рекомендуемое действие</p></div><span class="tag-count" id="anomalyCount">0 событий</span></div><div id="anomalyList" class="anomaly-list"></div></article>
+    </section>
+
+    <section class="page" id="page-notifications">
+      <div class="welcome-row"><div><div class="eyebrow">ЦЕНТР СОБЫТИЙ</div><h1>Уведомления</h1><p class="muted">Важные сообщения от систем мониторинга.</p></div><button class="secondary-btn" id="clearNotifications">Очистить список</button></div>
+      <article class="panel"><div id="notificationsList" class="notifications-list"></div></article>
+    </section>
+
+    <section class="page" id="page-settings">
+      <div class="welcome-row"><div><div class="eyebrow">ПЕРСОНАЛИЗАЦИЯ</div><h1>Настройки</h1><p class="muted">Параметры интерфейса и демонстрационных данных.</p></div></div>
+      <div class="settings-grid"><article class="panel settings-card"><h2>Внешний вид</h2><p class="muted">Выберите тему панели управления.</p><div class="setting-row"><div><strong>Светлая тема</strong><small>Удобна для ярких помещений</small></div><button class="secondary-btn" id="settingsThemeToggle">Переключить тему</button></div></article><article class="panel settings-card"><h2>Данные кампуса</h2><p class="muted">Все данные являются учебными и хранятся в браузере.</p><div class="setting-row"><div><strong>Сбросить данные</strong><small>Вернуть исходные демонстрационные значения</small></div><button class="danger-btn" id="resetDataBtn">Сбросить</button></div></article><article class="panel settings-card"><h2>О системе</h2><p class="muted">Smart Campus AI — учебный прототип системы управления инфраструктурой учебного заведения.</p><div class="info-line">HTML5 · CSS3 · JavaScript · Chart.js · localStorage</div></article></div>
+    </section>
+    <footer>Smart Campus AI <span>·</span> Учебный проект · 2026</footer>
+  </main>
+
+  <dialog id="incidentDialog"><form id="incidentForm" method="dialog"><div class="dialog-head"><h2 id="incidentDialogTitle">Новая заявка</h2><button type="button" class="close-btn" data-close="incidentDialog">×</button></div><label>Название заявки<input id="incidentTitle" required placeholder="Например, неисправность датчика"></label><div class="form-row"><label>Аудитория<select id="incidentRoom"></select></label><label>Приоритет<select id="incidentPriority"><option value="low">Низкий</option><option value="medium" selected>Средний</option><option value="high">Высокий</option><option value="critical">Критический</option></select></label></div><div class="form-row"><label>Ответственный<input id="incidentAssignee" value="Инженер"></label><label>Статус<select id="incidentStatus"><option value="open">Открыта</option><option value="progress">В работе</option><option value="resolved">Решена</option></select></label></div><label>Комментарий<textarea id="incidentComment" rows="3" placeholder="Дополнительная информация"></textarea></label><input type="hidden" id="incidentId"><div class="dialog-actions"><button type="button" class="secondary-btn" data-close="incidentDialog">Отмена</button><button type="submit" class="primary-btn">Сохранить</button></div></form></dialog>
+  <dialog id="roomDialog"><form id="roomForm" method="dialog"><div class="dialog-head"><h2>Добавить аудиторию</h2><button type="button" class="close-btn" data-close="roomDialog">×</button></div><label>Код аудитории<input id="newRoomId" required placeholder="A-301"></label><div class="form-row"><label>Корпус<select id="newRoomBuilding"><option>Корпус A</option><option>Корпус B</option><option>Корпус C</option></select></label><label>Этаж<input id="newRoomFloor" type="number" min="1" max="10" value="1" required></label></div><label>Тип помещения<input id="newRoomType" required placeholder="Лекционная аудитория"></label><div class="dialog-actions"><button type="button" class="secondary-btn" data-close="roomDialog">Отмена</button><button type="submit" class="primary-btn">Добавить</button></div></form></dialog>
+  <dialog id="deviceDialog"><form id="deviceForm" method="dialog"><div class="dialog-head"><h2>Добавить устройство</h2><button type="button" class="close-btn" data-close="deviceDialog">×</button></div><label>ID устройства<input id="newDeviceId" required placeholder="TEMP-A301-01"></label><div class="form-row"><label>Аудитория<select id="newDeviceRoom"></select></label><label>Тип<select id="newDeviceType"><option>Температура</option><option>CO₂</option><option>Освещение</option><option>Энергия</option><option>Доступ</option></select></label></div><div class="dialog-actions"><button type="button" class="secondary-btn" data-close="deviceDialog">Отмена</button><button type="submit" class="primary-btn">Добавить</button></div></form></dialog>
+  <div class="toast" id="toast"></div>
+  <script src="assets/js/data.js"></script><script src="assets/js/app.js"></script>
+</body>
+</html>
